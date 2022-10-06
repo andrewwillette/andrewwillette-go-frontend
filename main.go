@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"html/template"
+	"io"
 	"net/http"
 	"os"
 
@@ -34,15 +35,24 @@ func main() {
 
 func startServer() {
 	e := echo.New()
-	// Routes
 	e.GET("/", renderHomePage)
-
-	// Start server
+	t := &Template{
+		templates: template.Must(template.ParseGlob("templates/*.tmpl")),
+	}
+	e.Renderer = t
 	e.Logger.Fatal(e.Start(":80"))
 }
 
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
 func renderHomePage(c echo.Context) error {
-	data := []product{
+	_ = []product{
 		{"images/1.png", "strawberries", "$2.00", 4.0, 251, "Lorem ipsum dolor sit amet, consectetur adipiscing elit."},
 		{"images/2.png", "onions", "$2.80", 5.0, 123, "Morbi sit amet erat vitae purus consequat vehicula nec sit amet purus."},
 		{"images/3.png", "tomatoes", "$3.10", 4.5, 235, "Curabitur tristique odio et nibh auctor, ut sollicitudin justo condimentum."},
@@ -61,7 +71,7 @@ func renderHomePage(c echo.Context) error {
 	templates := template.Must(template.New("").Funcs(template.FuncMap{"subtr": subtr, "list": list}).ParseFiles(allPaths...))
 
 	var processed bytes.Buffer
-	templates.ExecuteTemplate(&processed, "page", data)
+	templates.ExecuteTemplate(&processed, "page", templates)
 
 	outputPath := "./static/index.html"
 	f, _ := os.Create(outputPath)
@@ -69,9 +79,10 @@ func renderHomePage(c echo.Context) error {
 	w.WriteString(string(processed.Bytes()))
 	w.Flush()
 
-	// return c.Render(http.StatusOK, "static/index.html", nil)
-	println("hitting here")
-	err := c.Render(http.StatusOK, "home", template.HTML(string(processed.Bytes())))
+	exampleData := map[string]interface{}{
+		"list": list,
+	}
+	err := c.Render(http.StatusOK, "page", exampleData)
 	if err != nil {
 		println(err.Error())
 		return err
@@ -106,5 +117,4 @@ func initBasicIndexHtml() {
 	w := bufio.NewWriter(f)
 	w.WriteString(string(processed.Bytes()))
 	w.Flush()
-
 }
