@@ -1,0 +1,16 @@
+p {
+	font-size: 28px;
+}
+
+#personalImage {
+	text-align: center;
+	width: 500px;
+	height: auto;
+}
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+}
