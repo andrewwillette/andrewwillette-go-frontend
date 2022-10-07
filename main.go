@@ -15,6 +15,7 @@ func main() {
 func startServer() {
 	e := echo.New()
 	e.GET("/", handleHomePage)
+	e.GET("/resume", handleResumePage)
 	e.File("/static/main.css", "static/main.css")
 	t := &Template{
 		templates: template.Must(template.ParseGlob("templates/*.tmpl")),
@@ -31,8 +32,16 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+func handleResumePage(c echo.Context) error {
+	err := c.Render(http.StatusOK, "resumepage", nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func handleHomePage(c echo.Context) error {
-	err := c.Render(http.StatusOK, "page", nil)
+	err := c.Render(http.StatusOK, "homepage", nil)
 	if err != nil {
 		return err
 	}
