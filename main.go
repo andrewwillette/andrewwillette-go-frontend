@@ -34,7 +34,11 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 }
 
 func handleMusicPage(c echo.Context) error {
-	err := c.Render(http.StatusOK, "musicpage", nil)
+	urls := []string{"carrollCountyBlues", "kansasCityRailroadBlues"}
+	data := map[string]interface{}{
+		"urls": urls,
+	}
+	err := c.Render(http.StatusOK, "musicpage", data)
 	if err != nil {
 		return err
 	}

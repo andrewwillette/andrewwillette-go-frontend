@@ -2,14 +2,13 @@
 {{template "header" -}}
 <div class="container">
 	<div id="music-page" class="center">
-  <ul>
-		<li>
-    Song One
-    </li>
-		<li>
-    Song Two
-    </li>
-  </ul>
+		<ul>
+		{{range .urls}}
+			<li class="nav-item">
+				{{.}}
+			</li>
+		{{end}}
+		</ul>
 	</div>
 </div>
 {{template "footer" -}}
