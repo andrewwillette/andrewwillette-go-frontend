@@ -16,6 +16,7 @@ func startServer() {
 	e := echo.New()
 	e.GET("/", handleHomePage)
 	e.GET("/resume", handleResumePage)
+	e.GET("/music", handleMusicPage)
 	e.File("/static/main.css", "static/main.css")
 	t := &Template{
 		templates: template.Must(template.ParseGlob("templates/*.tmpl")),
@@ -32,6 +33,13 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+func handleMusicPage(c echo.Context) error {
+	err := c.Render(http.StatusOK, "musicpage", nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func handleResumePage(c echo.Context) error {
 	err := c.Render(http.StatusOK, "resumepage", nil)
 	if err != nil {
