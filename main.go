@@ -33,8 +33,15 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+type soundcloudUrl struct {
+	url  string
+	name string
+}
+
 func handleMusicPage(c echo.Context) error {
-	urls := []string{"carrollCountyBlues", "kansasCityRailroadBlues"}
+	urls := []soundcloudUrl{
+		{url: "https://soundcloud.com/user-434601011/leather-britches", name: "Leather Britches"},
+		{url: "https://soundcloud.com/user-434601011/raggedy-ann", name: "Raggedy Ann"}}
 	data := map[string]interface{}{
 		"urls": urls,
 	}
