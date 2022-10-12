@@ -56,8 +56,9 @@ func handleMusicPage(c echo.Context) error {
 	return nil
 }
 func handleResumePage(c echo.Context) error {
-	err := c.Render(http.StatusOK, "resumepage", nil)
+	err := c.Redirect(http.StatusPermanentRedirect, "https://andrewwillette.s3.us-east-2.amazonaws.com/newdir/resume.pdf")
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	return nil
